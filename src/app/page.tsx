@@ -73,8 +73,8 @@ export default function Home() {
     <div className="space-y-6">
       {/* Header */}
       <div className="text-center pt-4">
-        <h1 className="text-3xl font-black">⚽ Tarjetas</h1>
-        <p className="text-gray-400 text-sm mt-1">Sistema de tarjetas entre amigos</p>
+        <h1 className="text-3xl font-black">⚽ El Tarjetero Muchachero</h1>
+        <p className="text-gray-400 text-sm mt-1">Sistema oficial de tarjetas de los muchachos</p>
       </div>
 
       {/* Active gathering highlight */}

@@ -23,8 +23,8 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
-        <title>Tarjetas \u26BD</title>
-        <meta name="description" content="Sistema de tarjetas entre amigos" />
+        <title>El Tarjetero Muchachero</title>
+        <meta name="description" content="El Tarjetero Muchachero - Sistema de tarjetas entre los muchachos" />
       </head>
       <body
         className={`${inter.className} antialiased bg-pitch text-foreground min-h-screen`}
