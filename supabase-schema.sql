@@ -58,11 +58,11 @@ create policy "Allow all on cards" on cards for all using (true) with check (tru
 -- Seed: Los Muchachos (20 miembros)
 insert into players (name, emoji) values
   ('Benja Sonne', '🐐'),
-  ('Joaco Haris', '👑'),
+  ('Joaco Haris', '🇩🇪'),
   ('Agustin Ehrman', '🔥'),
-  ('Bauti Cejas', '💀'),
+  ('Bauti Cejas', '🧑🏿'),
   ('Bauti Keena', '🎯'),
-  ('Brandom Joaco', '🤡'),
+  ('Brandom Joaco', '👔'),
   ('Carta', '🃏'),
   ('Coco Noe', '🥥'),
   ('Colo Pereira', '🏄'),

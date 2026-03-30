@@ -124,7 +124,7 @@ export default function NuevaJuntadaPage() {
   return (
     <div className="space-y-6">
       <div className="pt-4">
-        <h1 className="text-2xl font-black">➕ Nueva Juntada</h1>
+        <h1 className="text-2xl font-black">➕ Nueva Juntada Muchachera</h1>
         <p className="text-gray-400 text-sm mt-1">Arma la juntada y empieza a sacar tarjetas</p>
       </div>
 
@@ -136,7 +136,7 @@ export default function NuevaJuntadaPage() {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Asado en lo de Tomi"
+            placeholder="Semanal en Pacheco 53"
             required
             className="w-full bg-pitch-light border border-pitch-lighter rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-card-yellow transition-colors"
           />

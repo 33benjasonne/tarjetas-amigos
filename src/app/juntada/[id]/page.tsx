@@ -249,13 +249,39 @@ export default function JuntadaPage() {
         <CardFeed cards={cards} />
       </div>
 
+      {/* Close gathering button */}
+      {gathering.is_active && (
+        <div className="flex justify-center">
+          <button
+            onClick={async () => {
+              if (confirm("¿Cerrar esta juntada? No se van a poder sacar más tarjetas.")) {
+                await supabase.from("gatherings").update({ is_active: false }).eq("id", id)
+                setGathering({ ...gathering, is_active: false })
+              }
+            }}
+            className="text-sm text-gray-500 hover:text-red-400 border border-pitch-lighter rounded-xl px-4 py-2 transition-colors"
+          >
+            🔒 Cerrar juntada
+          </button>
+        </div>
+      )}
+
       {/* Floating action button */}
-      <button
-        onClick={() => setShowModal(true)}
-        className="fixed bottom-20 right-4 left-4 max-w-md mx-auto bg-card-yellow text-black font-black py-4 rounded-2xl text-lg shadow-lg shadow-card-yellow/30 hover:scale-[1.02] active:scale-[0.98] transition-transform z-30"
-      >
-        🃏 SACAR TARJETA
-      </button>
+      {gathering.is_active && (
+        <button
+          onClick={() => setShowModal(true)}
+          className="fixed bottom-20 right-4 left-4 max-w-md mx-auto bg-card-yellow text-black font-black py-4 rounded-2xl text-lg shadow-lg shadow-card-yellow/30 hover:scale-[1.02] active:scale-[0.98] transition-transform z-30"
+        >
+          🃏 SACAR TARJETA
+        </button>
+      )}
+
+      {/* Closed state */}
+      {!gathering.is_active && (
+        <div className="fixed bottom-20 right-4 left-4 max-w-md mx-auto bg-pitch-lighter text-gray-400 font-bold py-4 rounded-2xl text-lg text-center z-30">
+          🔒 Juntada cerrada
+        </div>
+      )}
 
       {/* Issue card modal */}
       {showModal && (
