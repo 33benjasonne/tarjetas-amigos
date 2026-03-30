@@ -55,25 +55,25 @@ create policy "Allow all on gatherings" on gatherings for all using (true) with 
 create policy "Allow all on attendance" on attendance for all using (true) with check (true);
 create policy "Allow all on cards" on cards for all using (true) with check (true);
 
--- Seed: Los 20 amigos (update names as needed)
+-- Seed: Los Muchachos (20 miembros)
 insert into players (name, emoji) values
-  ('Joaquín Ibáñez', '🦅'),
-  ('Jugador 2', '⚽'),
-  ('Jugador 3', '🔥'),
-  ('Jugador 4', '💀'),
-  ('Jugador 5', '🎯'),
-  ('Jugador 6', '🐐'),
-  ('Jugador 7', '🤡'),
-  ('Jugador 8', '👑'),
-  ('Jugador 9', '🎪'),
-  ('Jugador 10', '🚀'),
-  ('Jugador 11', '💣'),
-  ('Jugador 12', '🦈'),
-  ('Jugador 13', '🐺'),
-  ('Jugador 14', '⚡'),
-  ('Jugador 15', '🏆'),
-  ('Jugador 16', '🎸'),
-  ('Jugador 17', '🌶️'),
-  ('Jugador 18', '🦁'),
-  ('Jugador 19', '🍕'),
-  ('Jugador 20', '🎲');
+  ('Benja Sonne', '🐐'),
+  ('Joaco Haris', '👑'),
+  ('Agustin Ehrman', '🔥'),
+  ('Bauti Cejas', '💀'),
+  ('Bauti Keena', '🎯'),
+  ('Brandom Joaco', '🤡'),
+  ('Carta', '🃏'),
+  ('Coco Noe', '🥥'),
+  ('Colo Pereira', '🏄'),
+  ('Esteban Sauro', '🦈'),
+  ('Flecha', '🦅'),
+  ('Huevo', '🥚'),
+  ('Juan', '⚡'),
+  ('Juanchi De La Torre', '🏰'),
+  ('Minchu', '🎪'),
+  ('Nico Cassera', '🚀'),
+  ('Pampa', '🐴'),
+  ('Pipo Gibelli', '🎸'),
+  ('Sanga', '🌶️'),
+  ('Santi Parodi', '🎲');
