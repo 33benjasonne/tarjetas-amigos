@@ -11,6 +11,12 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        "card-yellow": "#FBBF24",
+        "card-blue": "#3B82F6",
+        "card-red": "#EF4444",
+        pitch: "#0a0f1a",
+        "pitch-light": "#111827",
+        "pitch-lighter": "#1f2937",
       },
     },
   },
