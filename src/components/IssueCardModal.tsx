@@ -19,15 +19,38 @@ const cardTypes: { type: CardType; emoji: string; label: string; color: string; 
 ]
 
 const quickReasons = [
+  "Dijo una boludes",
   "Llegó tarde",
-  "Falta innecesaria",
-  "Puteó al árbitro",
-  "Simulación",
-  "Se sacó la camiseta",
-  "Penal boludo",
-  "Mano de arquero",
-  "Gol en contra",
+  "Se cree canchero",
+  "Quemó la carne",
+  "Habla de más",
+  "Se fue al pasto",
+  "Dijo algo de Messi",
+  "No para de joder",
 ]
+
+function playWhistle() {
+  try {
+    const ctx = new AudioContext()
+    const oscillator = ctx.createOscillator()
+    const gain = ctx.createGain()
+
+    oscillator.type = "sine"
+    oscillator.frequency.setValueAtTime(1800, ctx.currentTime)
+    oscillator.frequency.linearRampToValueAtTime(1200, ctx.currentTime + 0.3)
+
+    gain.gain.setValueAtTime(0.3, ctx.currentTime)
+    gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.35)
+
+    oscillator.connect(gain)
+    gain.connect(ctx.destination)
+
+    oscillator.start(ctx.currentTime)
+    oscillator.stop(ctx.currentTime + 0.35)
+  } catch {
+    // Audio not supported, silently ignore
+  }
+}
 
 export default function IssueCardModal({
   gatheringId,
@@ -56,6 +79,7 @@ export default function IssueCardModal({
     })
 
     if (!error) {
+      playWhistle()
       onCardIssued({
         player_id: selectedPlayer.id,
         type: selectedType,
@@ -173,11 +197,11 @@ export default function IssueCardModal({
               {quickReasons.map((r) => (
                 <button
                   key={r}
-                  onClick={() => setReason(r)}
-                  className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
+                  onClick={() => setReason(reason === r ? "" : r)}
+                  className={`text-sm px-3 py-1.5 rounded-full border transition-colors ${
                     reason === r
                       ? "border-card-yellow bg-card-yellow/20 text-card-yellow"
-                      : "border-pitch-lighter text-gray-400 hover:border-gray-500"
+                      : "bg-pitch-lighter border-pitch-lighter text-gray-300 hover:border-gray-500"
                   }`}
                 >
                   {r}

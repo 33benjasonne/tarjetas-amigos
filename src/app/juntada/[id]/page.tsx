@@ -1,7 +1,8 @@
+/* eslint-disable @next/next/no-img-element */
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
-import { useParams } from "next/navigation"
+import { useEffect, useState, useCallback, useRef } from "react"
+import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import { supabase } from "@/lib/supabase"
 import type { Gathering, Player, Card, CardType } from "@/lib/types"
@@ -22,9 +23,12 @@ interface PlayerWithCards extends Player {
 
 export default function JuntadaPage() {
   const params = useParams()
+  const router = useRouter()
   const id = params.id as string
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const [gathering, setGathering] = useState<Gathering | null>(null)
+  const [uploadingPhoto, setUploadingPhoto] = useState(false)
   const [referee, setReferee] = useState<Player | null>(null)
   const [assistant, setAssistant] = useState<Player | null>(null)
   const [attendees, setAttendees] = useState<Player[]>([])
@@ -122,6 +126,55 @@ export default function JuntadaPage() {
     await fetchCards()
   }
 
+  const handleDelete = async () => {
+    if (!confirm("¿Seguro que querés eliminar esta juntada? Se pierden todas las tarjetas.")) return
+
+    // Delete in order due to foreign keys: cards → attendance → gathering
+    await supabase.from("cards").delete().eq("gathering_id", id)
+    await supabase.from("attendance").delete().eq("gathering_id", id)
+    await supabase.from("gatherings").delete().eq("id", id)
+
+    router.push("/")
+  }
+
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setUploadingPhoto(true)
+    try {
+      const path = `${id}/${file.name}`
+      const { error: uploadError } = await supabase.storage
+        .from("gathering-photos")
+        .upload(path, file, { upsert: true })
+
+      if (uploadError) {
+        console.error("Error uploading photo:", uploadError)
+        setUploadingPhoto(false)
+        return
+      }
+
+      const { data: urlData } = supabase.storage
+        .from("gathering-photos")
+        .getPublicUrl(path)
+
+      const photoUrl = urlData.publicUrl
+
+      await supabase
+        .from("gatherings")
+        .update({ photo_url: photoUrl })
+        .eq("id", id)
+
+      setGathering((prev) => prev ? { ...prev, photo_url: photoUrl } : prev)
+    } catch (err) {
+      console.error("Error uploading photo:", err)
+    }
+    setUploadingPhoto(false)
+
+    // Reset input so same file can be re-selected
+    if (fileInputRef.current) fileInputRef.current.value = ""
+  }
+
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
@@ -194,6 +247,45 @@ export default function JuntadaPage() {
         </div>
       </div>
 
+      {/* Photo section */}
+      <div>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handlePhotoUpload}
+          className="hidden"
+        />
+        {gathering.photo_url ? (
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="w-full relative group"
+            disabled={uploadingPhoto}
+          >
+            <img
+              src={gathering.photo_url}
+              alt={`Foto de ${gathering.name}`}
+              className="w-full rounded-xl object-cover max-h-64"
+            />
+            <div className="absolute inset-0 bg-black/40 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <span className="text-white text-sm font-medium">📸 Cambiar foto</span>
+            </div>
+          </button>
+        ) : (
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploadingPhoto}
+            className="w-full bg-pitch-light border border-dashed border-pitch-lighter rounded-xl px-4 py-6 text-gray-500 hover:text-gray-400 hover:border-gray-500 transition-colors text-sm"
+          >
+            {uploadingPhoto ? (
+              <span className="animate-pulse">Subiendo foto...</span>
+            ) : (
+              "📸 Subir foto de la juntada"
+            )}
+          </button>
+        )}
+      </div>
+
       {/* Stats bar */}
       <div className="grid grid-cols-3 gap-2">
         <div className="bg-card-yellow/10 border border-card-yellow/20 rounded-xl p-3 text-center">
@@ -262,6 +354,18 @@ export default function JuntadaPage() {
             className="text-sm text-gray-500 hover:text-red-400 border border-pitch-lighter rounded-xl px-4 py-2 transition-colors"
           >
             🔒 Cerrar juntada
+          </button>
+        </div>
+      )}
+
+      {/* Delete gathering button (only when closed) */}
+      {!gathering.is_active && (
+        <div className="flex justify-center">
+          <button
+            onClick={handleDelete}
+            className="text-sm text-red-500 hover:text-red-400 transition-colors"
+          >
+            🗑️ Eliminar juntada
           </button>
         </div>
       )}

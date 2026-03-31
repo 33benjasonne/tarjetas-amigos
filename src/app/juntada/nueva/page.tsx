@@ -4,6 +4,7 @@ export const dynamic = "force-dynamic"
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { supabase } from "@/lib/supabase"
 import type { Player } from "@/lib/types"
 
@@ -124,7 +125,10 @@ export default function NuevaJuntadaPage() {
   return (
     <div className="space-y-6">
       <div className="pt-4">
-        <h1 className="text-2xl font-black">➕ Nueva Juntada Muchachera</h1>
+        <Link href="/" className="text-gray-400 text-sm hover:text-gray-300 transition-colors">
+          ← Volver
+        </Link>
+        <h1 className="text-2xl font-black mt-2">➕ Nueva Juntada Muchachera</h1>
         <p className="text-gray-400 text-sm mt-1">Arma la juntada y empieza a sacar tarjetas</p>
       </div>
 

@@ -5,17 +5,24 @@ export const dynamic = "force-dynamic"
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { supabase } from "@/lib/supabase"
-import type { PlayerStats } from "@/lib/types"
+import type { PlayerStats, Player } from "@/lib/types"
+
+interface StreakInfo {
+  player: Player
+  streak: number
+}
 
 export default function LeaderboardPage() {
   const [stats, setStats] = useState<PlayerStats[]>([])
+  const [streaks, setStreaks] = useState<StreakInfo[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function fetchData() {
-      const [playersRes, cardsRes] = await Promise.all([
+      const [playersRes, cardsRes, gatheringsRes] = await Promise.all([
         supabase.from("players").select("*"),
         supabase.from("cards").select("*"),
+        supabase.from("gatherings").select("*").order("date", { ascending: false }),
       ])
 
       const players = playersRes.data ?? []
@@ -33,6 +40,30 @@ export default function LeaderboardPage() {
 
       playerStats.sort((a, b) => b.total - a.total)
       setStats(playerStats)
+
+      // Calculate streaks
+      const gatherings = gatheringsRes.data ?? []
+      const streakResults: StreakInfo[] = []
+
+      for (const player of players) {
+        let streak = 0
+        for (const gathering of gatherings) {
+          const hasCard = cards.some(
+            (c) => c.player_id === player.id && c.gathering_id === gathering.id
+          )
+          if (hasCard) {
+            streak++
+          } else {
+            break
+          }
+        }
+        if (streak >= 2) {
+          streakResults.push({ player, streak })
+        }
+      }
+
+      streakResults.sort((a, b) => b.streak - a.streak)
+      setStreaks(streakResults)
       setLoading(false)
     }
 
@@ -118,6 +149,22 @@ export default function LeaderboardPage() {
           ))}
         </div>
       )}
+
+      {/* Streaks */}
+      <div className="bg-pitch-light rounded-xl p-4">
+        <h2 className="text-lg font-black mb-3">🔥 Rachas</h2>
+        {streaks.length === 0 ? (
+          <p className="text-gray-400 text-sm">Sin rachas activas — están todos portados 😇</p>
+        ) : (
+          <div className="space-y-2">
+            {streaks.map((s) => (
+              <p key={s.player.id} className="text-gray-300">
+                {s.player.name} {s.player.emoji} — {s.streak} juntadas seguidas con tarjeta
+              </p>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

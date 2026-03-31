@@ -14,6 +14,7 @@ export interface Gathering {
   referee_id: string
   assistant_id: string | null
   is_active: boolean
+  photo_url: string | null
   created_at: string
   referee?: Player
   assistant?: Player

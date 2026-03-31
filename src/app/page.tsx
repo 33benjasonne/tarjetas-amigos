@@ -137,10 +137,10 @@ export default function Home() {
               .filter((g) => !g.is_active)
               .map((g) => (
                 <Link key={g.id} href={`/juntada/${g.id}`}>
-                  <div className="bg-pitch-light border border-pitch-lighter rounded-xl p-4 cursor-pointer hover:border-gray-600 transition-colors">
+                  <div className="bg-pitch-light border border-pitch-lighter rounded-xl p-4 cursor-pointer hover:border-gray-600 transition-colors opacity-75">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="font-semibold">{g.name}</p>
+                        <p className="font-semibold text-gray-300">{g.name}</p>
                         <p className="text-gray-500 text-xs">
                           📅 {new Date(g.date).toLocaleDateString("es-AR", {
                             weekday: "short",
@@ -151,7 +151,10 @@ export default function Home() {
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="text-gray-400 text-sm font-mono">
+                        <span className="bg-gray-600/20 text-gray-500 text-xs font-medium px-2 py-0.5 rounded-full">
+                          Cerrada
+                        </span>
+                        <p className="text-gray-500 text-sm font-mono mt-1">
                           🃏 {g.card_count}
                         </p>
                       </div>
